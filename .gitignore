@@ -2,3 +2,5 @@
 *.rar
 .vscode
 .env
+
+chromedriver.exe

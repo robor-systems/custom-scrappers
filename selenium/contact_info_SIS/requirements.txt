@@ -1,4 +1,3 @@
-googlemaps
 numpy
 openpyxl
 pandas
