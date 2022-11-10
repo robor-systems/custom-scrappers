@@ -1,7 +1,0 @@
-numpy
-openpyxl
-pandas
-selenium
-xlrd
-XlsxWriter
-python-dotenv
