@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+const randUserAgent = require("rand-user-agent");
 const ObjectsToCsv = require("objects-to-csv");
 
 // sleep function
@@ -10,7 +11,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const startTime = new Date().getTime();
   const browser = await puppeteer.launch({
     devtools: false,
-    headless: false,
+    headless: true,
     args: ["--start-maximized"],
   });
   //   const context = await browser.createIncognitoBrowserContext();
@@ -18,10 +19,15 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   //   await page.setViewport({ width: 1540, height: 700 });
 
   const page = await browser.newPage();
-
+  const agent = randUserAgent("desktop");
+  console.log(agent);
+  page.setUserAgent(agent);
   let scrappedData = [];
-  for (let index = 0; index <= 408; index++) {
+
+  //Scrape pages i = no of pages
+  for (let index = 0; index <= 5; index++) {
     console.log("index", index);
+
     let url = "";
     if (!index) {
       url = `https://clutch.co/agencies`;
@@ -32,8 +38,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await page.goto(url);
 
     try {
-      // timeout of 1min
-      await page.waitForSelector("section#providers", { timeout: 60000 });
+      // timeout of 5 min
+      await page.waitForSelector("section#providers", { timeout: 300000 });
     } catch (error) {
       await page.reload();
       console.error(error);
@@ -50,8 +56,6 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
           "div.col-md-3.provider-info__details > div > div:nth-child(4) > span",
           (el) => el.innerText.toLowerCase()
         );
-
-        console.log("address", address);
         let regionsNotAllowed = [
           "africa",
           "india",
@@ -61,14 +65,29 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         ];
 
         const notAllowed = regionsNotAllowed.some((el) => address.includes(el));
-        if (notAllowed) {
+        if (address && notAllowed) {
           console.log("*************************");
-          console.log("Found company in region not allowed");
-          console.log("Address: ", address);
-          console.log("Page Number: ", index);
-          console.log("Result Number: ", innerIndex);
+          console.log(
+            "Found company in region not allowed",
+            address,
+            index,
+            innerIndex
+          );
           console.log("*************************");
-          continue;
+        } else {
+          const companyName = await element.$eval(
+            "div.row.provider-info--header > div > h3 > a",
+            (el) => el.innerText
+          );
+
+          const website = await element.$eval(
+            "ul > li.website-link.website-link-a > a",
+            (el) => el.getAttribute("href")
+          );
+          if (website && companyName) {
+            scrappedData.push({ companyName, website });
+          }
+          console.log("compnay website + name", companyName, website);
         }
       } catch (error) {
         console.log("in error");
@@ -82,7 +101,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   const endTime = new Date().getTime();
-  //   console.log("Scrapped Data: ", scrappedData);
+  console.log("Scrapped Data: ", scrappedData);
   const csv = new ObjectsToCsv(scrappedData);
   await csv.toDisk("mrd.csv", { append: true });
   //   console.log("Script completed in", (endTime - startTime) / 1000, "seconds");
