@@ -1,7 +1,15 @@
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
 const fs = require("fs");
+const puppeteer = require("puppeteer-extra");
 const randUserAgent = require("rand-user-agent");
 const ObjectsToCsv = require("objects-to-csv");
+
+const agent = randUserAgent("desktop");
+console.log(agent);
+
+// add stealth plugin and use defaults (all evasion techniques)
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin());
 
 // sleep function
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -14,32 +22,27 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     headless: true,
     args: ["--start-maximized"],
   });
-  //   const context = await browser.createIncognitoBrowserContext();
-  //   const page = await context.newPage();
-  //   await page.setViewport({ width: 1540, height: 700 });
+  const context = await browser.createIncognitoBrowserContext();
+  const page = await context.newPage();
+  await page.setViewport({ width: 1540, height: 700 });
 
-  const page = await browser.newPage();
-  const agent = randUserAgent("desktop");
-  console.log(agent);
-  page.setUserAgent(agent);
+  await page.setUserAgent(agent);
+
   let scrappedData = [];
 
   //Scrape pages i = no of pages
-  for (let index = 0; index <= 5; index++) {
-    console.log("index", index);
-
+  for (let index = 0; index <= 408; index++) {
     let url = "";
     if (!index) {
       url = `https://clutch.co/agencies`;
     } else {
       url = `https://clutch.co/agencies?page=${index}`;
     }
-    console.log("url", url);
+
     await page.goto(url);
 
     try {
-      // timeout of 5 min
-      await page.waitForSelector("section#providers", { timeout: 300000 });
+      await page.waitForSelector("section#providers");
     } catch (error) {
       await page.reload();
       console.error(error);
@@ -75,6 +78,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
           );
           console.log("*************************");
         } else {
+          // if country is allowed scrap data
           const companyName = await element.$eval(
             "div.row.provider-info--header > div > h3 > a",
             (el) => el.innerText
@@ -103,7 +107,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const endTime = new Date().getTime();
   console.log("Scrapped Data: ", scrappedData);
   const csv = new ObjectsToCsv(scrappedData);
-  await csv.toDisk("mrd.csv", { append: true });
-  //   console.log("Script completed in", (endTime - startTime) / 1000, "seconds");
+  await csv.toDisk("./scrappedData/agencies.csv", { append: true });
+  console.log("Script completed in", (endTime - startTime) / 1000, "seconds");
   await browser.close();
 })();
