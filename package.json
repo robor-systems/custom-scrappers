@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "start-quirks": "node scrape-quirks.js",
     "start-greenbook": "node scrape-greenbook.js",
     "start-design": "node scrape-designdirectory.js",
     "start-clutch": "node scrape-clutch.js"
