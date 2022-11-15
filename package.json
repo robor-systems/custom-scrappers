@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "start-design": "node scrape-designdirectory.js",
     "start-clutch": "node scrape-clutch.js"
   },
   "dependencies": {
