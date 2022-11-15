@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start-mrd": "node scrape-marketingresourcedirectory.js"
+    "start-design": "node scrape-designdirectory.js"
   },
   "dependencies": {
     "convert-csv-to-json": "^1.3.3",
