@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start-mrd": "node scrape-marketingresourcedirectory.js"
+    "start-quirks": "node scrape-quirks.js"
   },
   "dependencies": {
     "convert-csv-to-json": "^1.3.3",
