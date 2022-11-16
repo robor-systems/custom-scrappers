@@ -3,7 +3,8 @@
     "start-quirks": "node scrape-quirks.js",
     "start-greenbook": "node scrape-greenbook.js",
     "start-design": "node scrape-designdirectory.js",
-    "start-clutch": "node scrape-clutch.js"
+    "start-clutch": "node scrape-clutch.js",
+    "start-researchsociety": "node scrape-researchsociety.js"
   },
   "dependencies": {
     "convert-csv-to-json": "^1.3.3",
