@@ -8,10 +8,10 @@ def remove_duplicates(file_name):
     print(file_name)
     df = pd.read_csv(file_name, sep=",")
     df.drop_duplicates(subset='website', inplace=True)
-    df.to_csv('./scrappedData/mrs-filtered.csv', index=False)
+    df.to_csv('./scrappedData/bluebook-filtered.csv', index=False)
 
 
-remove_duplicates('./scrappedData/mrs.csv')
+remove_duplicates('./scrappedData/bluebook.csv')
 # loop through files in output dir
 
 
