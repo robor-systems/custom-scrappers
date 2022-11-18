@@ -4,6 +4,7 @@
     "start-greenbook": "node scrape-greenbook.js",
     "start-design": "node scrape-designdirectory.js",
     "start-clutch": "node scrape-clutch.js",
+    "start-mrWeb": "node scrape-mrWeb.js",
     "start-mrssingapore": "node scrape-mrssingapore.js",
     "start-manifest": "node scrape-manifest.js",
     "start-99firms": "node scrape-99firms.js",
