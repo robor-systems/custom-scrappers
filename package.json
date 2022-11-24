@@ -12,7 +12,8 @@
     "start-g2": "node scrape-g2.js",
     "start-researchsociety": "node scrape-researchsociety.js",
     "start-mrs": "node scrape-mrs.js",
-    "start-esomar": "node scrape-esomar.js"
+    "start-esomar": "node scrape-esomar.js",
+    "start-mafonavigator": "node scrape-mafonavigator.js"
   },
   "dependencies": {
     "convert-csv-to-json": "^1.3.3",
